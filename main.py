@@ -14,13 +14,12 @@ def timer(f, *args, number=1000):
     return sum(times) / number
 
 
-
 def test():
     to_sort = [random.randint(100, 10000) for r in range(10000)]
     tested = list()
 
-    for length in range(2, 10):
-        for amount in range(2, 10):
+    for length in range(2, 6):
+        for amount in range(2, 6):
             print(f'Testing arrays with {10 ** amount} elements from {10 ** length} to {10 ** (length + 1)}')
             to_sort = [random.randint(10 ** length, 10 ** (length + 1) - 1)
                        for _ in range(10 ** amount)]
@@ -28,6 +27,7 @@ def test():
             tested.append({'range': f'{10 ** length}-{10 ** (length + 1) - 1}',
                            'amount': 10 ** amount,
                            'time': f'{ex_time * 1000}ms'})
+            print(f'{ex_time * 1000}ms')
     return tested
 
 test_results = test()
