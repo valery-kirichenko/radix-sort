@@ -1,5 +1,6 @@
 import random
 import time
+import sys
 import json
 import math
 import matplotlib.pyplot as plt
@@ -35,7 +36,8 @@ def test():
     tested = list()
     for length in lengths:
         for amount in amounts:
-            print(f'Testing arrays with {amount} elements from {length} to {10 * length - 1}')
+            print(f'Testing arrays with {amount} elements from {length} '
+                   'to {10 * length - 1}')
             to_sort = generate(length, amount)
             ex_time = timer(algorithm.radix_sort, to_sort, 10)
             tested.append({'from': length,
@@ -46,40 +48,24 @@ def test():
     return tested
 
 
-test_results = test()
-with open('results.txt', 'w') as f:
-    f.write(json.dumps(test_results))
-"""
-test_results = [{'from': 100, 'to': 1000, 'amount': 100, 'time': 0.2936387062072754},
- {'from': 100, 'to': 1000, 'amount': 1000, 'time': 2.571721076965332},
- {'from': 100, 'to': 1000, 'amount': 10000, 'time': 25.2116060256958},
- {'from': 100, 'to': 1000, 'amount': 50000, 'time': 132.6355004310608},
- {'from': 100, 'to': 1000, 'amount': 100000, 'time': 303.45458030700684},
- {'from': 1000, 'to': 10000, 'amount': 100, 'time': 0.39357900619506836},
- {'from': 1000, 'to': 10000, 'amount': 1000, 'time': 3.5889291763305664},
- {'from': 1000, 'to': 10000, 'amount': 10000, 'time': 33.23658227920532},
- {'from': 1000, 'to': 10000, 'amount': 50000, 'time': 179.6462917327881},
- {'from': 1000, 'to': 10000, 'amount': 100000, 'time': 409.38971519470215},
- {'from': 10000, 'to': 100000, 'amount': 100, 'time': 0.49304246902465815},
- {'from': 10000, 'to': 100000, 'amount': 1000, 'time': 4.22809362411499},
- {'from': 10000, 'to': 100000, 'amount': 10000, 'time': 44.155919551849365},
- {'from': 10000, 'to': 100000, 'amount': 50000, 'time': 238.2860016822815},
- {'from': 10000, 'to': 100000, 'amount': 100000, 'time': 492.75259733200073},
- {'from': 100000, 'to': 1000000, 'amount': 100, 'time': 0.5645918846130371},
- {'from': 100000, 'to': 1000000, 'amount': 1000, 'time': 5.214958190917969},
- {'from': 100000, 'to': 1000000, 'amount': 10000, 'time': 50.919528007507324},
- {'from': 100000, 'to': 1000000, 'amount': 50000, 'time': 289.8490285873413},
- {'from': 100000, 'to': 1000000, 'amount': 100000, 'time': 590.8728098869324}]
-"""
+if 'load' in sys.argv:
+    with open('results.txt') as results_file:
+        test_results = json.loads(results_file.read())
+else:
+    test_results = test()
+    with open('results.txt', 'w') as f:
+        f.write(json.dumps(test_results))
+
 
 amount_series = list(chunks(list(range(len(amounts) * len(lengths))), len(amounts)))
-length_series = [[x + i for x in list(range(0, len(amounts) * len(lengths), len(amounts)))] for i in range(len(lengths) + 1)]
+length_series = [[x + i for x in list(range(0, len(amounts) * len(lengths), len(amounts)))] for i in range(len(amounts))]
 
 plt.figure(1)
 plt.title('Зависимость от числа элементов')
 plt.xlabel('Число элементов')
 plt.ylabel('Время выполнения (мс)')
 plt.grid(True)
+
 for amount_indices in amount_series:
     plt.plot([test_result['amount'] for test_result in itemgetter(*amount_indices)(test_results)],
         [test_result['time'] for test_result in itemgetter(*amount_indices)(test_results)],
@@ -90,16 +76,18 @@ plt.xscale('log')
 plt.yscale('log')
 plt.savefig('amount_log.png', bbox_inches='tight', dpi=300)
 
+
 plt.figure(2)
 plt.title('Зависимость от длины чисел')
 plt.xlabel('Длина числа')
 plt.ylabel('Время выполнения (мс)')
 plt.grid(True)
+
 for length_indices in length_series:
     plt.plot([math.log(test_result['to'], 10) for test_result in itemgetter(*length_indices)(test_results)],
         [test_result['time'] for test_result in itemgetter(*length_indices)(test_results)],
         label=test_results[length_indices[0]]['amount'], marker='.')
-plt.legend(title='Число элементов')
+plt.legend(title='Число элементов', loc='center', bbox_to_anchor=(1.22, 0.5), ncol=2)
 plt.savefig('length.png', bbox_inches='tight', dpi=300)
 plt.xscale('log')
 plt.yscale('log')
