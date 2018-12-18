@@ -7,7 +7,11 @@ from operator import itemgetter
 import algorithm
 
 
-def timer(f, *args, number=100):
+def generate(length, amount):
+    return [random.randint(length, 10 * length - 1) for _ in range(amount)]
+
+
+def timer(f, *args, number=1000):
     times = []
     for _ in range(number):
         start = time.time()
@@ -23,18 +27,15 @@ def chunks(l, n):
         yield l[i:i + n]
 
 
-lengths = [100, 1000, 10000, 100000]
-amounts = [100, 1000, 10000, 50000, 100000]
+lengths = [1, 10, 1000, 10000000]
+amounts = [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
 
 def test():
-    to_sort = [random.randint(100, 10000) for r in range(10000)]
     tested = list()
-
     for length in lengths:
         for amount in amounts:
             print(f'Testing arrays with {amount} elements from {length} to {10 * length - 1}')
-            to_sort = [random.randint(length, 10 * length - 1)
-                       for _ in range(amount)]
+            to_sort = generate(length, amount)
             ex_time = timer(algorithm.radix_sort, to_sort, 10)
             tested.append({'from': length,
                            'to': 10 * length,
