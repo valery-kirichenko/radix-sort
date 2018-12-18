@@ -1,5 +1,6 @@
 import random
 import time
+import json
 import math
 import matplotlib.pyplot as plt
 from operator import itemgetter
@@ -47,7 +48,7 @@ def test():
 
 test_results = test()
 with open('results.txt', 'w') as f:
-    f.write(test_results)
+    f.write(json.dumps(test_results))
 """
 test_results = [{'from': 100, 'to': 1000, 'amount': 100, 'time': 0.2936387062072754},
  {'from': 100, 'to': 1000, 'amount': 1000, 'time': 2.571721076965332},
