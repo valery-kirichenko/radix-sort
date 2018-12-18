@@ -37,7 +37,7 @@ def test():
     for length in lengths:
         for amount in amounts:
             print(f'Testing arrays with {amount} elements from {length} '
-                   'to {10 * length - 1}')
+                  f'to {10 * length - 1}')
             to_sort = generate(length, amount)
             ex_time = timer(algorithm.radix_sort, to_sort, 10)
             tested.append({'from': length,
