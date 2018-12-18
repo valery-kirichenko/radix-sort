@@ -13,11 +13,12 @@ def generate(length, amount):
     return [random.randint(length, 10 * length - 1) for _ in range(amount)]
 
 
-def timer(number=1000):
+def timer(length, amount, number=10):
     times = []
     for _ in range(number):
+        to_sort = generate(length, amount)
         start = time.time()
-        algorithm.radix_sort(generate(length, amount))
+        algorithm.radix_sort(to_sort, 10)
         stop = time.time()
         times.append(stop - start)
     return sum(times) / number
@@ -38,7 +39,7 @@ def test():
         for amount in amounts:
             print(f'Testing arrays with {amount} elements from {length} '
                   f'to {10 * length - 1}')
-            ex_time = timer()
+            ex_time = timer(length, amount)
             tested.append({'from': length,
                            'to': 10 * length,
                            'amount': amount,
