@@ -13,7 +13,7 @@ def generate(length, amount):
     return [random.randint(length, 10 * length - 1) for _ in range(amount)]
 
 
-def timer(length, amount, number=10):
+def timer(length, amount, number=500):
     times = []
     for _ in range(number):
         to_sort = generate(length, amount)
