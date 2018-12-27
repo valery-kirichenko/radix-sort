@@ -13,7 +13,7 @@ def generate(length, amount):
     return [random.randint(length, 10 * length - 1) for _ in range(amount)]
 
 
-def timer(length, amount, number=500):
+def timer(length, amount, number=2000):
     times = []
     for _ in range(number):
         to_sort = generate(length, amount)
@@ -65,12 +65,13 @@ plt.title('Зависимость от числа элементов')
 plt.xlabel('Число элементов')
 plt.ylabel('Время выполнения (мс)')
 plt.grid(True)
-
+# {a -> 0.000519248, b -> 0.851639, c -> 1.01574, d -> 0.30329}
 for amount_indices in amount_series:
     plt.plot([test_result['amount'] for test_result in itemgetter(*amount_indices)(test_results)],
         [test_result['time'] for test_result in itemgetter(*amount_indices)(test_results)],
-        label=f'{test_results[amount_indices[0]]["from"]}-{test_results[amount_indices[0]]["to"]}', marker='.')
-plt.legend(title='Диапазон чисел')
+        label=f'{len(str(test_results[amount_indices[0]]["from"]))}', marker='.')
+plt.plot(amounts, [0.000519248 * 8**0.851639 * amount**1.01574 + 0.30329 for amount in amounts], '--', label='Аппроксимация для 8')
+plt.legend(title='Количество разрядов')
 plt.savefig('amount.png', bbox_inches='tight', dpi=300)
 plt.xscale('log')
 plt.yscale('log')
@@ -87,7 +88,8 @@ for length_indices in length_series:
     plt.plot([math.log(test_result['to'], 10) for test_result in itemgetter(*length_indices)(test_results)],
         [test_result['time'] for test_result in itemgetter(*length_indices)(test_results)],
         label=test_results[length_indices[0]]['amount'], marker='.')
-plt.legend(title='Число элементов', loc='center', bbox_to_anchor=(1.22, 0.5), ncol=2)
+plt.plot([len(str(length)) for length in lengths], [0.000519248 * len(str(length))**0.851639 * 51200**1.01574 + 0.30329 for length in lengths], '--', label='Аппроксимация\nдля 52000')
+plt.legend(title='Число элементов', loc='center', bbox_to_anchor=(1.27, 0.5), ncol=2)
 plt.savefig('length.png', bbox_inches='tight', dpi=300)
 plt.xscale('log')
 plt.yscale('log')
